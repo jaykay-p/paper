@@ -1,8 +1,10 @@
 name: Deploy
 
+# Paused: GitHub Pages only serves a static export, and the app now has
+# server actions + a database (M1.2 CRUD), which static export can't run.
+# Manual-dispatch only until a Node-capable host is picked (see PAP-2/PAP-3).
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
