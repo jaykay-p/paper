@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
-import { createTodo } from "./actions";
+import { FREE_TODO_LIMIT, isBillingConfigured, isPro } from "@/lib/billing";
 import { logOut } from "./(auth)/actions";
+import { PlanBadge } from "./plan-badge";
+import { TodoForm } from "./todo-form";
 import { TodoItem } from "./todo-item";
 
 export const dynamic = "force-dynamic";
@@ -12,6 +14,7 @@ export default async function Home() {
     where: { userId: user.id },
     orderBy: { createdAt: "asc" },
   });
+  const pro = isPro(user);
 
   return (
     <main className="flex flex-1 flex-col items-center gap-8 p-8">
@@ -29,26 +32,18 @@ export default async function Home() {
               </button>
             </form>
           </div>
+          <div className="mt-3 flex justify-center">
+            <PlanBadge isPro={pro} billingConfigured={isBillingConfigured()} />
+          </div>
         </div>
 
-        <form
-          action={createTodo}
-          className="flex gap-2"
-        >
-          <input
-            name="title"
-            type="text"
-            required
-            placeholder="Add a to-do..."
-            className="flex-1 rounded-md border border-black/10 dark:border-white/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-black/30 dark:focus:border-white/40"
-          />
-          <button
-            type="submit"
-            className="rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium"
-          >
-            Add
-          </button>
-        </form>
+        <TodoForm />
+
+        {!pro && todos.length > 0 ? (
+          <p className="text-center text-xs text-black/40 dark:text-white/40">
+            {todos.length}/{FREE_TODO_LIMIT} to-dos used on the Free plan
+          </p>
+        ) : null}
 
         {todos.length === 0 ? (
           <p className="text-center text-sm text-black/40 dark:text-white/40">

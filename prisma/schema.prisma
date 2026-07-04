@@ -13,6 +13,10 @@ model User {
   passwordHash String
   createdAt    DateTime @default(now())
 
+  stripeCustomerId     String?   @unique
+  stripeSubscriptionId String?   @unique
+  subscriptionStatus   String?
+
   sessions Session[]
   todos    Todo[]
 }
