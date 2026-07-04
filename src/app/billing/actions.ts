@@ -39,8 +39,8 @@ export async function startCheckout() {
     mode: "subscription",
     customer: customerId,
     line_items: [{ price: process.env.STRIPE_PRICE_ID!, quantity: 1 }],
-    success_url: `${appUrl}/`,
-    cancel_url: `${appUrl}/`,
+    success_url: `${appUrl}/app?upgraded=1`,
+    cancel_url: `${appUrl}/upgrade`,
     client_reference_id: user.id,
   });
 
@@ -57,7 +57,7 @@ export async function openBillingPortal() {
   const stripe = getStripe();
   const session = await stripe.billingPortal.sessions.create({
     customer: user.stripeCustomerId,
-    return_url: `${getAppUrl()}/`,
+    return_url: `${getAppUrl()}/app`,
   });
 
   redirect(session.url);

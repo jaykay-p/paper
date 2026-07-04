@@ -26,7 +26,7 @@ export async function createTodo(
     return `Free plan is limited to ${FREE_TODO_LIMIT} to-dos. Upgrade to add more.`;
   }
 
-  revalidatePath("/");
+  revalidatePath("/app");
 }
 
 export async function toggleTodo(id: string, completed: boolean) {
@@ -35,7 +35,7 @@ export async function toggleTodo(id: string, completed: boolean) {
     where: { id, userId: user.id },
     data: { completed },
   });
-  revalidatePath("/");
+  revalidatePath("/app");
 }
 
 export async function updateTodoTitle(id: string, title: string) {
@@ -47,11 +47,11 @@ export async function updateTodoTitle(id: string, title: string) {
     where: { id, userId: user.id },
     data: { title: trimmed },
   });
-  revalidatePath("/");
+  revalidatePath("/app");
 }
 
 export async function deleteTodo(id: string) {
   const user = await requireUser();
   await prisma.todo.deleteMany({ where: { id, userId: user.id } });
-  revalidatePath("/");
+  revalidatePath("/app");
 }

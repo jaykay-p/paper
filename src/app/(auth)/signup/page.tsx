@@ -6,7 +6,7 @@ import { signUp } from "../actions";
 
 export default async function SignupPage() {
   const user = await getCurrentUser();
-  if (user) redirect("/");
+  if (user) redirect("/app");
 
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-6 p-8">

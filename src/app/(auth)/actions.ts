@@ -22,7 +22,7 @@ export async function signUp(_prevState: string | undefined, formData: FormData)
   const user = await prisma.user.create({ data: { email, passwordHash } });
 
   await createSession(user.id);
-  redirect("/");
+  redirect("/welcome");
 }
 
 export async function logIn(_prevState: string | undefined, formData: FormData) {
@@ -37,7 +37,7 @@ export async function logIn(_prevState: string | undefined, formData: FormData) 
   }
 
   await createSession(user.id);
-  redirect("/");
+  redirect("/app");
 }
 
 export async function logOut() {
