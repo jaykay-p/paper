@@ -1,11 +1,17 @@
 import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/auth";
 import { createTodo } from "./actions";
+import { logOut } from "./(auth)/actions";
 import { TodoItem } from "./todo-item";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const todos = await prisma.todo.findMany({ orderBy: { createdAt: "asc" } });
+  const user = await requireUser();
+  const todos = await prisma.todo.findMany({
+    where: { userId: user.id },
+    orderBy: { createdAt: "asc" },
+  });
 
   return (
     <main className="flex flex-1 flex-col items-center gap-8 p-8">
@@ -15,6 +21,14 @@ export default async function Home() {
           <p className="text-lg text-black/60 dark:text-white/60">
             Simple, fast to-dos.
           </p>
+          <div className="mt-2 flex items-center justify-center gap-2 text-sm text-black/50 dark:text-white/50">
+            <span>{user.email}</span>
+            <form action={logOut}>
+              <button type="submit" className="underline underline-offset-2">
+                Log out
+              </button>
+            </form>
+          </div>
         </div>
 
         <form
